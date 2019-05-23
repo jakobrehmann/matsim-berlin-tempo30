@@ -18,6 +18,7 @@
  * *********************************************************************** */
 package main.ha1.analysis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,13 +44,14 @@ public class CarTravelDistanceEvaluator implements LinkEnterEventHandler, Person
 	private Map<Id<Person>,Double> travelledDistance = new HashMap<>(); 
 	private Double travelledDistanceTotal;
 	private Map<Id<Vehicle>,Id<Person>> vehicles2Persons = new HashMap<>();
+	private ArrayList<String> linksWithinRing = new ArrayList<>();
 	
 	private int[] distanceDistribution = new int[30];
 	
-	public CarTravelDistanceEvaluator(Network network) {
+	public CarTravelDistanceEvaluator(Network network, ArrayList<String> linksWithinRing) {
 		this.network = network;
 		this.travelledDistanceTotal = 0. ;
-		
+		this.linksWithinRing = linksWithinRing ; // progress so far
 	}
 	
 	@Override

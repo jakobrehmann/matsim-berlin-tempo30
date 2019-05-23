@@ -34,7 +34,7 @@ class AnalysePlans{
 	private static Path popTempo30 = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\tempo30Case\\output\\ITERS\\it.200\\berlin-v5.3-1pct.200.plans.xml.gz");
 	
 	public static void main ( String [] args ) {
-		System.out.println("hello");
+
 //        URL configUrl = IOUtils.newUrl( ExamplesUtils.getTestScenarioURL( "equil" ), "config.xml" );;
 //        Config config = ConfigUtils.loadConfig( configUrl ) ;
 

@@ -19,10 +19,15 @@
 package main.ha1.analysis;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Scanner;
 
+import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.ConfigUtils;
@@ -31,6 +36,7 @@ import org.matsim.core.events.MatsimEventsReader;
 import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.io.IOUtils;
+import org.matsim.vehicles.Vehicle;
 
 public class RunEventsHandler {
 	static Path inputNetwork = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\input\\be_5_network_with-pt-ride-freight.xml") ;
@@ -38,21 +44,134 @@ public class RunEventsHandler {
 	static Path inputEventsTempo30 = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\tempo30Case\\output\\ITERS\\it.200\\berlin-v5.3-1pct.200.events.xml.gz");
 	static Path outputHandlerBase = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\tempo30Case\\handler\\carDistancesBase.txt");
 	static Path outputHandlerTempo30 = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\tempo30Case\\handler\\carDistancesTempo30.txt");
+	static Path LinksWithinRing = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\LinksWithinRing.txt");
+	private static Path VehWithinRingBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingBase.txt");
+	private static Path VehWithinRingTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingTempo30.txt");
+	private static Path VehUniqueInBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehUniqueInBase.txt");
+	private static Path VehUniqueInTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehUniqueInTempo30.txt");
 
-	public static void main(String[] args) {
-
-		EventsManager eventsManager = EventsUtils.createEventsManager();
-		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+	public static void main(String[] args) throws FileNotFoundException {
 		
-		new MatsimNetworkReader(scenario.getNetwork()).readFile(inputNetwork.toString());
+	
 		
-		CarTravelDistanceEvaluator carTravelDistanceEvaluator = new CarTravelDistanceEvaluator(scenario.getNetwork());
-		eventsManager.addHandler(carTravelDistanceEvaluator);
-		new MatsimEventsReader(eventsManager).readFile(inputEventsBase.toString());
 		
-		writeDistancesToFile(carTravelDistanceEvaluator.getDistanceDistribution(), outputHandlerBase.toString());
-		System.out.print(carTravelDistanceEvaluator.getTravelledDistanceTotal());
+		
+//		{
+//			EventsManager eventsManager = EventsUtils.createEventsManager();
+//			Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+//			
+//			new MatsimNetworkReader(scenario.getNetwork()).readFile(inputNetwork.toString());
+//			
+//			CarTravelDistanceEvaluator carTravelDistanceEvaluator = new CarTravelDistanceEvaluator(scenario.getNetwork(), linksWithinRing);
+//			eventsManager.addHandler(carTravelDistanceEvaluator);
+//			new MatsimEventsReader(eventsManager).readFile(inputEventsBase.toString());
+//			
+//			writeDistancesToFile(carTravelDistanceEvaluator.getDistanceDistribution(), outputHandlerBase.toString());
+//			System.out.print(carTravelDistanceEvaluator.getTravelledDistanceTotal());
+//		}
+		
+		
+		// If cars cross into inner city
+//		{
+//			EventsManager events = EventsUtils.createEventsManager();
+//
+//			//create the handler and add it
+//			CityCenterEventEnterHandler cityCenterEventEnterHandler = new CityCenterEventEnterHandler();
+//
+//			//add the links here that you want to monitor
+//			ArrayList<String> linksWithinRing = readLinksFile(LinksWithinRing.toString()) ;
+//			for (String link : linksWithinRing) {
+//				System.out.println();
+//				cityCenterEventEnterHandler.addLinkId(Id.createLinkId(link));
+//			}
+//			events.addHandler(cityCenterEventEnterHandler);
+//
+//
+//	        //create the reader and read the file
+//			MatsimEventsReader reader = new MatsimEventsReader(events);
+//			reader.readFile(inputEventsBase.toString());
+//			System.out.println(cityCenterEventEnterHandler.getVehiclesInCityCenter().size());
+//			
+//			
+//			//System.out.println(cityCenterEventEnterHandler.getVehiclesInCityCenter());
+//			
+//			System.out.println("Events file read!");
+//			WriteVehicleIdsCityCenter(cityCenterEventEnterHandler.getVehiclesInCityCenter(), VehWithinRingBase.toString() ) ;
+//		}
+			
+		
+		//Analysis of Veh in City Center
+		{
+			ArrayList<String> base = readLinksFile(VehWithinRingBase.toString()) ;
+			ArrayList<String> tempo30 = readLinksFile(VehWithinRingTempo30.toString()) ;
+			ArrayList<String> vehUniqueInBase = new ArrayList<String>() ;
+			ArrayList<String> vehUniqueInTempo30 = new ArrayList<String>() ;
+			
+			for (String veh : base) {
+				if (!tempo30.contains(veh)) {
+					vehUniqueInBase.add(veh);
+					//System.out.println(veh);
+				}
+			}
+			
+			for (String veh : tempo30) {
+				if (!base.contains(veh)) {
+					vehUniqueInTempo30.add(veh);
+					//System.out.println(veh);
+				}
+			}
+			System.out.println(vehUniqueInBase.size());
+			System.out.println(vehUniqueInTempo30.size());
+			WriteVehicleIds(vehUniqueInBase, VehUniqueInBase.toString());
+			WriteVehicleIds(vehUniqueInTempo30, VehUniqueInTempo30.toString());
+			
+		}
 	}
+	
+	static ArrayList<String> readLinksFile(String fileName) throws FileNotFoundException {
+		Scanner s = new Scanner(new File(fileName));
+		ArrayList<String> list = new ArrayList<String>();
+		while (s.hasNext()){
+		    list.add(s.next());
+		}
+		s.close();
+		return list;
+	}
+	
+	static void WriteVehicleIdsCityCenter(ArrayList<Id<Vehicle>> VehIds, String fileName){
+		BufferedWriter bw = IOUtils.getBufferedWriter(fileName);
+		try {
+			for (int i = 0;i<VehIds.size();i++){
+			bw.newLine();
+			bw.write(VehIds.get(i).toString());	
+			}
+			bw.flush();
+			bw.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	static void WriteVehicleIds(ArrayList<String> VehIds, String fileName){
+		BufferedWriter bw = IOUtils.getBufferedWriter(fileName);
+		try {
+			for (int i = 0;i<VehIds.size();i++){
+			bw.newLine();
+			bw.write(VehIds.get(i).toString());	
+			}
+			bw.flush();
+			bw.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	
 	static void writeDistancesToFile(int[] distanceDistribution, String fileName){
 		BufferedWriter bw = IOUtils.getBufferedWriter(fileName);
 		try {
@@ -67,9 +186,7 @@ public class RunEventsHandler {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		
+		}	
 	}
 
 }
