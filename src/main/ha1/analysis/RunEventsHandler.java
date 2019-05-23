@@ -25,10 +25,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.events.EventsUtils;
@@ -101,31 +103,54 @@ public class RunEventsHandler {
 			
 		
 		//Analysis of Veh in City Center
+//		{
+//			ArrayList<String> base = readLinksFile(VehWithinRingBase.toString()) ;
+//			ArrayList<String> tempo30 = readLinksFile(VehWithinRingTempo30.toString()) ;
+//			ArrayList<String> vehUniqueInBase = new ArrayList<String>() ;
+//			ArrayList<String> vehUniqueInTempo30 = new ArrayList<String>() ;
+//			
+//			for (String veh : base) {
+//				if (!tempo30.contains(veh)) {
+//					vehUniqueInBase.add(veh);
+//					//System.out.println(veh);
+//				}
+//			}
+//			
+//			for (String veh : tempo30) {
+//				if (!base.contains(veh)) {
+//					vehUniqueInTempo30.add(veh);
+//					//System.out.println(veh);
+//				}
+//			}
+//			System.out.println(vehUniqueInBase.size());
+//			System.out.println(vehUniqueInTempo30.size());
+//			WriteVehicleIds(vehUniqueInBase, VehUniqueInBase.toString());
+//			WriteVehicleIds(vehUniqueInTempo30, VehUniqueInTempo30.toString());
+//			
+//		}
+		// Travel Time
 		{
+			TravelTimeEventHandler timeHandler = new TravelTimeEventHandler() ;
+			EventsManager manager = EventsUtils.createEventsManager();
+			manager.addHandler(timeHandler);
+			new MatsimEventsReader(manager).readFile(inputEventsTempo30.toString());
+			double totalTravelTime = timeHandler.computeOverallTravelTime() ;
+			System.out.println("time = " + totalTravelTime/3600 + " hours") ;
+			
+			// For Subpopulation
+			Map<Id<Person>, Double> travelTimeByAgent = timeHandler.getTravelTimeByAgent() ;
 			ArrayList<String> base = readLinksFile(VehWithinRingBase.toString()) ;
-			ArrayList<String> tempo30 = readLinksFile(VehWithinRingTempo30.toString()) ;
-			ArrayList<String> vehUniqueInBase = new ArrayList<String>() ;
-			ArrayList<String> vehUniqueInTempo30 = new ArrayList<String>() ;
+			double subPopTravelTimeTotal = 0. ;
 			
-			for (String veh : base) {
-				if (!tempo30.contains(veh)) {
-					vehUniqueInBase.add(veh);
-					//System.out.println(veh);
+			for (Id<Person> per : travelTimeByAgent.keySet()) {
+				if (base.contains(per.toString())) {
+					subPopTravelTimeTotal += travelTimeByAgent.get(per);
 				}
 			}
-			
-			for (String veh : tempo30) {
-				if (!base.contains(veh)) {
-					vehUniqueInTempo30.add(veh);
-					//System.out.println(veh);
-				}
-			}
-			System.out.println(vehUniqueInBase.size());
-			System.out.println(vehUniqueInTempo30.size());
-			WriteVehicleIds(vehUniqueInBase, VehUniqueInBase.toString());
-			WriteVehicleIds(vehUniqueInTempo30, VehUniqueInTempo30.toString());
+			System.out.println("Subpop time = " + subPopTravelTimeTotal/3600 + " hours") ;
 			
 		}
+		
 	}
 	
 	static ArrayList<String> readLinksFile(String fileName) throws FileNotFoundException {
