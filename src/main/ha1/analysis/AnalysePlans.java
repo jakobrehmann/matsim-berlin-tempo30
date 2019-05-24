@@ -23,6 +23,8 @@ import org.matsim.core.utils.io.IOUtils;
 //import org.matsim.examples.ExamplesUtils;
 import org.matsim.facilities.ActivityFacility;
 
+import main.ha1.utils.MyUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -44,18 +46,23 @@ class AnalysePlans{
 
 		Scenario sc = ScenarioUtils.createScenario(ConfigUtils.createConfig());
         new PopulationReader(sc).readFile(popTempo30.toString()); 
+        
         final Population pop = sc.getPopulation();
         
-        ArrayList<String> vehWithinRing = readLinksFile(VehWithinRingBase.toString()) ;
+        ArrayList<String> vehWithinRing = MyUtils.readLinksFile(VehWithinRingBase.toString()) ;
         
         
         long nCarLegs = 0 ;
     	long nPtLegs = 0 ;
+    	long nCarLegsSubPop = 0 ;
+    	long nPtLegsSubPop = 0 ;
         long nCarUsingPersons = 0 ;
         double totalCarDistance = 0. ;
         double totalPtDistance = 0. ;
         double totalCarDistanceSubPop = 0. ;
         double totalPtDistanceSubPop = 0. ;
+        
+        
         for ( Person person : pop.getPersons().values() ) {
             boolean carUser = false ;
             Plan plan = person.getSelectedPlan() ;
@@ -67,6 +74,7 @@ class AnalysePlans{
                     
                     //for every person in the sub pop, check how much they drove (within and outside of Ring)
                     if (vehWithinRing.contains(plan.getPerson().getId().toString())) {
+                    	nCarLegsSubPop ++ ;
                     	totalCarDistanceSubPop += leg.getRoute().getDistance() ;
                     }
                 }
@@ -75,6 +83,7 @@ class AnalysePlans{
 					nPtLegs++ ;
 					totalPtDistance += leg.getRoute().getDistance() ;
                     if (vehWithinRing.contains(plan.getPerson().getId().toString())) {
+                    	nPtLegsSubPop++ ;
                     	totalPtDistanceSubPop += leg.getRoute().getDistance() ;
                     }
                 }
@@ -91,14 +100,8 @@ class AnalysePlans{
         System.out.println( "Total Pt Distance = " + totalPtDistance/1000 ) ;
         System.out.println( "Total Subpop Car Dist = " + totalCarDistanceSubPop/1000 ) ;
         System.out.println( "Total Subpop Pt Dist = " + totalPtDistanceSubPop/1000 ) ;
+        System.out.println( "Number of car legs SubPop = " + nCarLegsSubPop ) ;
+        System.out.println( "Number of Pt legs SubPop = " + nPtLegsSubPop ) ;
     }
-	static ArrayList<String> readLinksFile(String fileName) throws FileNotFoundException {
-		Scanner s = new Scanner(new File(fileName));
-		ArrayList<String> list = new ArrayList<String>();
-		while (s.hasNext()){
-		    list.add(s.next());
-		}
-		s.close();
-		return list;
-	}
+
 }
