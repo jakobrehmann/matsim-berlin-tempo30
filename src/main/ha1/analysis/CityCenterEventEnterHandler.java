@@ -20,9 +20,7 @@
 package main.ha1.analysis;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.LinkEnterEvent;
 import org.matsim.api.core.v01.events.handler.LinkEnterEventHandler;
@@ -51,7 +49,6 @@ public class CityCenterEventEnterHandler implements LinkEnterEventHandler {
 	public void handleEvent(LinkEnterEvent event) {
 		if ((this.cityCenterLinks.contains(event.getLinkId())) && (!agentsInCityCenter.contains(event.getVehicleId()))
 				&& (!event.getVehicleId().toString().contains(c)))
-//		if (this.cityCenterLinks.contains(event.getLinkId()))
 		{
 		this.agentsInCityCenter.add(event.getVehicleId());
 		}

@@ -21,7 +21,7 @@ implements ActivityEndEventHandler, ActivityStartEventHandler {
 	}
 	
 	double computeOverallTravelTime() {
-		return travelTimebyAgent.values().stream().mapToDouble(d -> d).sum(); // stream api Important! Read Isis
+		return travelTimebyAgent.values().stream().mapToDouble(d -> d).sum(); 
 	}
 			
 	@Override
@@ -30,7 +30,6 @@ implements ActivityEndEventHandler, ActivityStartEventHandler {
 			ActivityEndEvent endEvent = openTrips.remove(event.getPersonId()) ;
 			double travelTime = event.getTime() - endEvent.getTime() ;
 			travelTimebyAgent.merge(event.getPersonId(), travelTime, (a,b) -> a + b);
-			// lambda function, a is original thing, b is new travel time
 		}
 	}
 

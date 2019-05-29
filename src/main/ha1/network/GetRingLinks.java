@@ -7,14 +7,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-
 import org.locationtech.jts.geom.Geometry;
 import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.network.NetworkUtils;
 import org.matsim.core.network.io.MatsimNetworkReader;
-import org.matsim.core.network.io.NetworkWriter;
 import org.matsim.core.utils.geometry.geotools.MGC;
 import org.matsim.core.utils.gis.ShapeFileReader;
 import org.matsim.core.utils.io.IOUtils;
@@ -23,8 +21,8 @@ import org.opengis.feature.simple.SimpleFeature;
 public class GetRingLinks {
 	static Path inputFile = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\input\\be_5_network_with-pt-ride-freight.xml") ;
 	private static Path filterShape = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\GIS\\ring6.shp") ;
-	private static Path outputFile = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\LinksWithinRing.txt");
-	private static Path outputFileOutsideRing = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\LinksOutsideRing.txt");
+	private static Path outputFile = Paths.get(".\\output\\LinksWithinRing.txt");
+	private static Path outputFileOutsideRing = Paths.get(".\\output\\LinksOutsideRing.txt");
 	static ArrayList<String> linkIds = new ArrayList<>() ;
 	static ArrayList<String> linkIdsOutsideRing = new ArrayList<>() ;
 	
@@ -68,7 +66,6 @@ public class GetRingLinks {
 			bw.close();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 }

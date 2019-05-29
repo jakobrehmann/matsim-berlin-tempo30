@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import main.ha1.utils.MyUtils;
 
 public class CreateSubPopulations {
-	private static Path VehUniqueInBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehUniqueInBase.txt");
-	private static Path VehUniqueInTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehUniqueInTempo30.txt");
-	private static Path VehWithinRingBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingBase.txt");
-	private static Path VehWithinRingTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingTempo30.txt");
+	private static Path VehUniqueInBase = Paths.get(".\\output\\VehUniqueInBase.txt");
+	private static Path VehUniqueInTempo30 = Paths.get(".\\output\\VehUniqueInTempo30.txt");
+	private static Path VehWithinRingBase = Paths.get(".\\output\\VehWithinRingBase.txt");
+	private static Path VehWithinRingTempo30 = Paths.get(".\\output\\VehWithinRingTempo30.txt");
 	
 
 	public static void main(String[] args) {

@@ -42,11 +42,11 @@ public class RunEventsHandler {
 	static Path inputNetwork = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\input\\be_5_network_with-pt-ride-freight.xml") ;
 	static Path inputEventsBase = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\web_output\\berlin-v5.3-1pct.output_events.xml.gz");
 	static Path inputEventsTempo30 = Paths.get("C:\\Users\\jakob\\Dropbox\\Documents\\Education-TUB\\2019_SS\\MATSim\\HA1\\tempo30Case\\output\\ITERS\\it.200\\berlin-v5.3-1pct.200.events.xml.gz");
-	static Path outputCarDistBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\carDistancesBase.txt");
-	static Path outputCarDistTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\carDistancesTempo30.txt");
-	static Path LinksWithinRing = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\LinksWithinRing.txt");
-	private static Path VehWithinRingBase = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingBase.txt");
-	private static Path VehWithinRingTempo30 = Paths.get("C:\\Users\\jakob\\eclipse-workspace\\matsim-berlin-tempo30\\output\\VehWithinRingTempo30.txt");
+	static Path outputCarDistBase = Paths.get(".\\output\\carDistancesBase.txt");
+	static Path outputCarDistTempo30 = Paths.get(".\\output\\carDistancesTempo30.txt");
+	static Path LinksWithinRing = Paths.get(".\\output\\LinksWithinRing.txt");
+	private static Path VehWithinRingBase = Paths.get(".\\output\\VehWithinRingBase.txt");
+	private static Path VehWithinRingTempo30 = Paths.get(".\\output\\VehWithinRingTempo30.txt");
 	
 	public static void main(String[] args) {
 		ArrayList<String> linksWithinRing = MyUtils.readLinksFile(LinksWithinRing.toString()) ;
@@ -69,20 +69,20 @@ public class RunEventsHandler {
 		}
 		
 	
-		// If cars cross into inner city
-//		{
-//			CityCenterEventEnterHandler cityCenterEventEnterHandler = new CityCenterEventEnterHandler();
-//
-//			for (String link : linksWithinRing) { //add city center links
-//				System.out.println();
-//				cityCenterEventEnterHandler.addLinkId(Id.createLinkId(link));
-//			}
-//			manager.addHandler(cityCenterEventEnterHandler);
-//
-//			System.out.println(cityCenterEventEnterHandler.getVehiclesInCityCenter().size());		
-//			System.out.println("Events file read!");
-//			MyUtils.writeArrayListVehicle(cityCenterEventEnterHandler.getVehiclesInCityCenter(), VehWithinRingBase.toString() ) ;
-//		}
+//		 If cars cross into inner city
+		{
+			CityCenterEventEnterHandler cityCenterEventEnterHandler = new CityCenterEventEnterHandler();
+
+			for (String link : linksWithinRing) { //add city center links
+				System.out.println();
+				cityCenterEventEnterHandler.addLinkId(Id.createLinkId(link));
+			}
+			manager.addHandler(cityCenterEventEnterHandler);
+
+			System.out.println(cityCenterEventEnterHandler.getVehiclesInCityCenter().size());		
+			System.out.println("Events file read!");
+			MyUtils.writeArrayListVehicle(cityCenterEventEnterHandler.getVehiclesInCityCenter(), VehWithinRingTempo30.toString() ) ;
+		}
 			
 		// Travel Time
 		{
